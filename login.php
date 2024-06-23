@@ -1,8 +1,5 @@
 <?php
 include 'extra/header.php';
-session_start();
-$_SESSION['user_name'] = null;
-$_SESSION['userToken'] = null;
 ?>
 <!DOCTYPE html>
 <html lang="uk">

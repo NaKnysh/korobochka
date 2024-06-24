@@ -168,6 +168,21 @@
 			const charityId = 'korobochkacharity.testnet';
             const privateKey = document.getElementById('privateKey').value;
 
+			const response = await fetch('process_order.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ userName: <?php echo json_encode($_SESSION['user_name']); ?> }),
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                } else {
+                    alert('Failed to process orders');
+                }
+
             if (!privateKey) {
                 alert('Поле приватного ключа обов\'язкове для заповнення');
                 return;
@@ -176,6 +191,12 @@
                 const signedTxBase64 = await createAndSignTransaction(receiverId);
 				const TxBase64 = await charityTransaction(receiverId, charityId);
                 alert('Transaction completed');
+				
+				fetch('clear_cart.php', {
+					method: 'POST'
+				})
+				
+				window.location.href = 'index.php';
             } catch (error) {
                 console.error('Error:', error);
                 alert('Transaction failed');

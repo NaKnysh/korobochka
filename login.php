@@ -94,7 +94,7 @@ include 'extra/header.php';
 				<div>
 					<button onclick="login()" style="width:100px;">Вхід</button>
 				</div>
-				</br>
+				<br>
 				<a href=http://korobochka.local/>Продовжити як гість</a>
 			</div>
 		</div>

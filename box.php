@@ -12,7 +12,7 @@
 			$box = mysqli_fetch_assoc($result);
 			echo '<h1>' . $box['name'] . '</h1>';
 			echo '<p>' . $box['description'] . '</p>';
-			echo '<p>Ціна: ' . $box['price'] . ' грн</p>';
+			echo '<p>Ціна: ' . $box['price'] . ' $</p>';
 			// Припустимо, що possibleItemsId - це кома-розділений рядок ID елементів
 			$items_ids = explode(',', $box['possibleItemsId']);
 			$items_query = "SELECT * FROM item WHERE id IN (" . implode(',', $items_ids) . ")";
@@ -35,3 +35,7 @@
 		echo '<p>Некоректний ID коробки.</p>';
 	}
 ?>
+
+<a href="index.php">
+    <button style="padding: 10px 20px; font-size: 16px; cursor: pointer;">Назад</button>
+</a>

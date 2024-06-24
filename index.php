@@ -12,55 +12,6 @@
 	while ($row = mysqli_fetch_assoc($result)) {
 		echo "ID: " . $row['id'] . " - Name: " . $row['name'] . "<br>";
 	}
-	
-	
-	
-	function generateBox($conn, $boxtype_id) {
-		// Отримання ціни та можливих елементів для даного boxtype_id
-		$stmt = $conn->prepare("SELECT price, possibleItemsId FROM boxtype WHERE id = ?");
-		$stmt->bind_param("i", $boxtype_id);
-		$stmt->execute();
-		$stmt->bind_result($price, $possible_items);
-		$stmt->fetch();
-		$stmt->close();
-
-		// Ініціалізація змінних
-		$total_value = 0;
-		$itemList = array();
-		$possible_items_array = explode(",", $possible_items);
-
-		// Отримання можливих елементів з таблиці item
-		$placeholders = implode(',', array_fill(0, count($possible_items_array), '?'));
-		$types = str_repeat('i', count($possible_items_array));
-		$stmt = $conn->prepare("SELECT id, value, quantityInStock FROM item WHERE id IN ($placeholders) AND quantityInStock > 0 ORDER BY RAND()");
-		$stmt->bind_param($types, ...$possible_items_array);
-		$stmt->execute();
-		$result = $stmt->get_result();
-
-		// Вибір елементів до тих пір, поки їхня загальна вартість не перевищить price
-		while ($row = $result->fetch_assoc()) {
-			if ($total_value + $row['value'] <= $price) {
-				$total_value += $row['value'];
-				$itemList[] = $row['id'];
-
-				// Зменшення кількості товару в наявності
-				$update_stmt = $conn->prepare("UPDATE item SET quantityInStock = quantityInStock - 1 WHERE id = ?");
-				$update_stmt->bind_param("i", $row['id']);
-				$update_stmt->execute();
-				$update_stmt->close();
-			}
-		}
-		$stmt->close();
-
-		// Створення нового запису в таблиці box
-		$itemListId = implode(",", $itemList);
-		$stmt = $conn->prepare("INSERT INTO box (typeId, itemListId) VALUES (?, ?)");
-		$stmt->bind_param("is", $boxtype_id, $itemListId);
-		$stmt->execute();
-		$stmt->close();
-	}
-	
-	generateBox($connection, 1);
 
 	// Закриття з'єднання
 	mysqli_close($connection);
@@ -119,7 +70,7 @@
 								</li>
 							</ul>
 							<div class="header-button">
-								<a onclick="return get_cart()" href="#">Корзина <span id="items_in_cart"></span></a>
+								<a onclick="return get_cart()" href="#">Кошик <span id="items_in_cart"></span></a>
 								<div id="cart_preview"></div>
 							</div>
 							<div class="header-user">
